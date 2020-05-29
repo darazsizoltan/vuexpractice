@@ -1,7 +1,17 @@
 <template>
     <div>
         {{categories}}
-        sajt
+        <form @submit.prevent="getJoke">
+            <input type="text" v-model="category">
+            <input type="submit">
+        </form>
+        <div v-if="joke.type === 'single'">
+            {{joke.joke}}
+        </div>
+        <div v-else>
+            <p>{{joke.setup}}</p>
+            <p>{{joke.delivery}}</p>
+        </div>
     </div>
 
 </template>
@@ -20,18 +30,23 @@
 
         },
         data(){
-            return {
-                categories: []
-            }
+          return {
+              category : 'Programming'
+          }
         },
         created() {
-            this.$state.dispatch("loadCategories")
+            this.$store.dispatch("loadCategories")
         },
         computed: {
-            ...mapState([
-                'categories',
-                'joke'
-            ])
+            ...mapState({
+                categories: 'categories',
+                joke:'joke'}
+    )
+    },
+    methods: {
+        getJoke() {
+                this.$store.dispatch("loadJoke", this.category)
+            }
         }
     }
 

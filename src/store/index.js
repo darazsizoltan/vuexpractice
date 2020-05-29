@@ -7,22 +7,31 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     categories: [],
-    joke: "kiskutya"
+    joke: {}
   },
   mutations: {
-    setCategories (categories) {
-      this.state.categories = categories;
+    setCategories (state, categories) {
+      console.log(categories)
+      state.categories = categories;
     },
-    setJoke (joke) {
-      this.state.joke = joke;
+    setJoke (state, joke) {
+      state.joke = joke;
     }
   },
   actions: {
     loadCategories ({commit}) {
       axios.get('https://sv443.net/jokeapi/v2/categories')
           .then(res => {
-            let categories = res.data.categories
-            commit(categories)
+            // let categories = res.data.categories
+            commit('setCategories', res.data.categories)
+          })
+          .catch(err => console.log(err))
+    },
+    loadJoke ({commit}, category) {
+      axios.get(`https://sv443.net/jokeapi/v2/joke/${category}`)
+          .then(res => {
+            // let categories = res.data.categories
+            commit('setJoke', res.data)
           })
           .catch(err => console.log(err))
     }

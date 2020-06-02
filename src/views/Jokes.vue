@@ -1,9 +1,16 @@
 <template>
     <div>
-        {{categories}}
+        <ul id="example-1">
+            <li v-for="category in categories" :key="category">
+                {{ category }}
+            </li>
+        </ul>
         <form @submit.prevent="getJoke">
-            <input type="text" v-model="category"> <br/>
 
+            <select v-model="selected"  >
+                <option v-for="category in categories" :key="category" v-bind:value="category">{{ category }}</option>
+            </select>
+            <br/>
             <label> Single </label>
             <input type="radio" id="single" value="single" v-model="type">
             <br/>
@@ -12,7 +19,7 @@
             <br/>
             <input type="submit">
         </form>
-        <div v-if="joke.type === 'single'">
+        <div v-if="isSingleTpye">
             {{joke.joke}}
         </div>
         <div v-else>
@@ -31,32 +38,35 @@
 
     export default {
         name: "Jokes",
-        data(){
-          return {
-              type: "single",
-              category : 'Dark'
-          }
+        data() {
+            return {
+                type: "single",
+                selected: ''
+            }
         },
         created() {
             this.$store.dispatch("loadCategories")
         },
         computed: {
             ...mapState({
-                categories: 'categories',
-                joke:'joke'}
-    )
-    },
-    methods: {
-        getJoke() {
-            const payload = {
-                category : this.category,
-                type: this.type
+                    categories: 'categories',
+                    joke: 'joke'
+                },
+            ),
+            isSingleTpye: function () {
+                return this.joke.type === 'single' ? true: false;
             }
-            this.$store.dispatch("loadJoke", payload)
+        },
+        methods: {
+            getJoke() {
+                const payload = {
+                    category: this.selected,
+                    type: this.type
+                }
+                this.$store.dispatch("loadJoke", payload)
             }
-        }
+        },
     }
-
 
 
 </script>

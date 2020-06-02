@@ -17,7 +17,6 @@ export default new Vuex.Store({
   },
   mutations: {
     setCategories (state, categories) {
-      console.log(categories)
       state.categories = categories;
     },
     setJoke (state, joke) {

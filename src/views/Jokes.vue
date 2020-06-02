@@ -2,7 +2,14 @@
     <div>
         {{categories}}
         <form @submit.prevent="getJoke">
-            <input type="text" v-model="category">
+            <input type="text" v-model="category"> <br/>
+
+            <label> Single </label>
+            <input type="radio" id="single" value="single" v-model="type">
+            <br/>
+            <label> Two Part </label>
+            <input type="radio" id="twopart" value="twopart" v-model="type">
+            <br/>
             <input type="submit">
         </form>
         <div v-if="joke.type === 'single'">
@@ -13,7 +20,6 @@
             <p>{{joke.delivery}}</p>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -25,13 +31,10 @@
 
     export default {
         name: "Jokes",
-        components: {
-
-
-        },
         data(){
           return {
-              category : 'Programming'
+              type: "single",
+              category : 'Dark'
           }
         },
         created() {
@@ -45,7 +48,11 @@
     },
     methods: {
         getJoke() {
-                this.$store.dispatch("loadJoke", this.category)
+            const payload = {
+                category : this.category,
+                type: this.type
+            }
+            this.$store.dispatch("loadJoke", payload)
             }
         }
     }
